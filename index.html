@@ -13,6 +13,8 @@
             align-items: center;
             justify-content: center;
             height: 100vh;
+            color: white;
+            font-family: 'Arial', sans-serif;
         }
 
         #particles-js {
@@ -25,9 +27,16 @@
         .main-text {
             position: relative;
             z-index: 2; /* Ensure text is above particles */
-            color: white;
-            font-family: 'Arial', sans-serif;
             text-align: center;
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 1.5em;
         }
     </style>
 </head>
@@ -49,7 +58,7 @@
                     value: '#ffffff',
                 },
                 shape: {
-                    type: 'circle',
+                    type: ['circle', 'edge', 'triangle', 'polygon', 'star'],
                 },
             },
             interactivity: {
