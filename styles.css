@@ -9,3 +9,11 @@ body {
     height: 100%;
     background-color: black;
 }
+
+.particle {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background-color: white;
+}
+
