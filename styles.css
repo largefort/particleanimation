@@ -12,8 +12,15 @@ body {
 
 .particle {
     position: absolute;
-    width: 2px;
-    height: 2px;
-    background-color: white;
+    width: 6px;
+    height: 6px;
+    background-color: #fff;
+    border-radius: 50%;
+    animation: moveUp linear infinite;
 }
 
+@keyframes moveUp {
+    to {
+        transform: translateY(-100vh);
+    }
+}
