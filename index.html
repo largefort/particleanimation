@@ -3,91 +3,199 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Realistic 3D Particle System</title>
+    <title>Particle.js Example</title>
     <style>
         body {
             margin: 0;
             overflow: hidden;
+            background-color: black; /* Set the background color to black */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: white;
+            font-family: 'Arial', sans-serif;
+            position: relative;
         }
 
-        canvas {
-            display: block;
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 1; /* Ensure particles are above other elements */
+        }
+
+        .main-text {
+            position: relative;
+            z-index: 2; /* Ensure text is above particles */
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 1.5em;
+        }
+
+        .settings-btn {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 3; /* Ensure button is above particles and text */
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 4; /* Ensure modal is above everything else */
+        }
+
+        .modal-content {
+            background-color: #1f1f1f;
+            padding: 20px;
+            border-radius: 5px;
+            max-width: 400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .close-btn {
+            color: white;
+            background-color: #3498db;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #warningModal {
+            display: none;
         }
     </style>
 </head>
 <body>
-    <script src="https://threejs.org/build/three.js"></script>
+    <div id="particles-js"></div>
+    <div class="main-text">
+        <h1>Particle.js Example</h1>
+        <p>Customize this space for your content.</p>
+    </div>
+    <button class="settings-btn" onclick="openSettings()">Settings</button>
+
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeSettings()">&times;</span>
+            <h2>Particle Settings</h2>
+            <label for="particleNumber">Number of Particles:</label>
+            <input type="range" id="particleNumber" min="1" max="200" value="100" oninput="updateParticles(this.value)">
+            <br>
+            <label for="performanceMode">Performance Mode:</label>
+            <input type="checkbox" id="performanceMode" onclick="togglePerformanceMode()">
+        </div>
+    </div>
+
+    <div id="warningModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeWarning()">&times;</span>
+            <h2>Warning!</h2>
+            <p>Displaying a high number of particles may significantly reduce the frame rate.</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
-        // Set up the scene, camera, and renderer
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
-
-        // Load a texture for the particles
-        const textureLoader = new THREE.TextureLoader();
-        const particleTexture = textureLoader.load('particle_texture.png'); // Replace with your texture
-
-        // Create a particle geometry
-        const particleGeometry = new THREE.BufferGeometry();
-        const particleMaterial = new THREE.PointsMaterial({
-            color: 0xFFFFFF,
-            size: 0.2,
-            map: particleTexture,
-            transparent: true,
-            blending: THREE.AdditiveBlending
-        });
-
-        // Define the number of particles
-        const particleCount = 1000;
-
-        // Create positions array for particles
-        const positions = new Float32Array(particleCount * 3);
-
-        // Populate the positions array with random values
-        for (let i = 0; i < positions.length; i += 3) {
-            positions[i] = (Math.random() - 0.5) * 10;
-            positions[i + 1] = (Math.random() - 0.5) * 10;
-            positions[i + 2] = (Math.random() - 0.5) * 10;
-        }
-
-        // Add the positions to the particle geometry
-        particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-
-        // Create a particle system
-        const particles = new THREE.Points(particleGeometry, particleMaterial);
-
-        // Add the particle system to the scene
-        scene.add(particles);
-
-        // Set the camera position
-        camera.position.z = 5;
-
-        // Create an animation loop
-        const animate = function () {
-            requestAnimationFrame(animate);
-
-            // Rotate the particle system
-            particles.rotation.x += 0.001;
-            particles.rotation.y += 0.001;
-
-            renderer.render(scene, camera);
+        // Initial particle settings
+        let particleSettings = {
+            particles: {
+                number: {
+                    value: 100,
+                },
+                color: {
+                    value: '#ffffff',
+                },
+                shape: {
+                    type: ['circle', 'edge', 'triangle', 'polygon', 'star'],
+                },
+            },
+            interactivity: {
+                events: {
+                    onhover: {
+                        enable: true,
+                        mode: 'repulse',
+                    },
+                    ontouchstart: {
+                        enable: true,
+                        mode: 'repulse',
+                    },
+                },
+            },
         };
 
-        // Handle window resize
-        window.addEventListener('resize', function () {
-            const newWidth = window.innerWidth;
-            const newHeight = window.innerHeight;
+        let performanceMode = false;
 
-            camera.aspect = newWidth / newHeight;
-            camera.updateProjectionMatrix();
+        particlesJS('particles-js', particleSettings);
 
-            renderer.setSize(newWidth, newHeight);
-        });
+        function openSettings() {
+            document.getElementById('settingsModal').style.display = 'flex';
+        }
 
-        // Start the animation loop
-        animate();
+        function closeSettings() {
+            document.getElementById('settingsModal').style.display = 'none';
+        }
+
+        function updateParticles(value) {
+            // Update the number of particles based on the input value
+            particleSettings.particles.number.value = parseInt(value);
+
+            // Check if the number of particles is greater than a threshold
+            if (particleSettings.particles.number.value > 150) {
+                document.getElementById('warningModal').style.display = 'flex';
+            } else {
+                document.getElementById('warningModal').style.display = 'none';
+            }
+
+            // Destroy the current particles and recreate them with updated settings
+            particlesJS('particles-js', 'destroy');
+            particlesJS('particles-js', particleSettings);
+        }
+
+        function closeWarning() {
+            document.getElementById('warningModal').style.display = 'none';
+        }
+
+        function togglePerformanceMode() {
+            performanceMode = document.getElementById('performanceMode').checked;
+
+            // Update particle settings based on performance mode
+            if (performanceMode) {
+                particleSettings.particles.number.value = 50;
+            } else {
+                particleSettings.particles.number.value = 100;
+            }
+
+            // Update the range input value
+            document.getElementById('particleNumber').value = particleSettings.particles.number.value;
+
+            // Destroy the current particles and recreate them with updated settings
+            particlesJS('particles-js', 'destroy');
+            particlesJS('particles-js', particleSettings);
+        }
     </script>
 </body>
 </html>
