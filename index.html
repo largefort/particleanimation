@@ -88,13 +88,19 @@
         #warningModal {
             display: none;
         }
+
+        /* Additional style for the settings modal */
+        #settingsModal .modal-content label {
+            display: block;
+            margin: 10px 0;
+        }
     </style>
 </head>
 <body>
     <div id="particles-js"></div>
     <div class="main-text">
         <h1>Particle.js Example</h1>
-        <p>enjoy the open source particle.js example.</p>
+        <p>Enjoy the open source particle.js example.</p>
     </div>
     <button class="settings-btn" onclick="openSettings()">Settings</button>
 
@@ -105,11 +111,17 @@
             <label for="particleNumber">Number of Particles:</label>
             <input type="range" id="particleNumber" min="1" max="200" value="100" oninput="updateParticles(this.value)">
             <br>
-            <label for="performanceMode">Performance Mode:</label>
-            <input type="checkbox" id="performanceMode" onclick="togglePerformanceMode()">
+            <label for="particleColor">Particle Color:</label>
+            <input type="color" id="particleColor" onchange="updateParticleColor(this.value)">
             <br>
-            <label for="hdMode">HD Mode:</label>
-            <input type="checkbox" id="hdMode" onclick="toggleHdMode()">
+            <label for="particleShape">Particle Shape:</label>
+            <select id="particleShape" onchange="updateParticleShape(this.value)">
+                <option value="circle">Circle</option>
+                <option value="triangle">Triangle</option>
+                <option value="edge">Edge</option>
+                <!-- Add more shape options as needed -->
+            </select>
+            <br>
         </div>
     </div>
 
@@ -122,171 +134,183 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-   <script>
-    let particleSettings = {
-        particles: {
-            number: {
-                value: 80,
-                density: {
-                    enable: true,
-                    value_area: 800,
-                },
-            },
-            color: {
-                value: '#ffffff',
-            },
-            shape: {
-                type: 'circle',
-                stroke: {
-                    width: 0,
-                    color: '#000000',
-                },
-            },
-            opacity: {
-                value: 0.5,
-                random: false,
-                anim: {
-                    enable: false,
-                    speed: 1,
-                    opacity_min: 0.1,
-                    sync: false,
-                },
-            },
-            size: {
-                value: 3,
-                random: true,
-                anim: {
-                    enable: false,
-                    speed: 40,
-                    size_min: 0.1,
-                    sync: false,
-                },
-            },
-            line_linked: {
-                enable: true,
-                distance: 150,
-                color: '#ffffff',
-                opacity: 0.4,
-                width: 1,
-            },
-            move: {
-                enable: true,
-                speed: 6,
-                direction: 'none',
-                random: false,
-                straight: false,
-                out_mode: 'out',
-                bounce: false,
-                attract: {
-                    enable: false,
-                    rotateX: 600,
-                    rotateY: 1200,
-                },
-            },
-        },
-        interactivity: {
-            detect_on: 'canvas',
-            events: {
-                onhover: {
-                    enable: true,
-                    mode: 'repulse',
-                },
-                onclick: {
-                    enable: true,
-                    mode: 'push',
-                },
-                resize: true,
-            },
-            modes: {
-                grab: {
-                    distance: 400,
-                    line_linked: {
-                        opacity: 1,
+    <script>
+        let particleSettings = {
+            particles: {
+                number: {
+                    value: 80,
+                    density: {
+                        enable: true,
+                        value_area: 800,
                     },
                 },
-                bubble: {
-                    distance: 400,
-                    size: 40,
-                    duration: 2,
-                    opacity: 8,
-                    speed: 3,
+                color: {
+                    value: '#ffffff',
                 },
-                repulse: {
-                    distance: 200,
-                    duration: 0.4,
+                shape: {
+                    type: 'circle',
+                    stroke: {
+                        width: 0,
+                        color: '#000000',
+                    },
                 },
-                push: {
-                    particles_nb: 4,
+                opacity: {
+                    value: 0.5,
+                    random: false,
+                    anim: {
+                        enable: false,
+                        speed: 1,
+                        opacity_min: 0.1,
+                        sync: false,
+                    },
                 },
-                remove: {
-                    particles_nb: 2,
+                size: {
+                    value: 3,
+                    random: true,
+                    anim: {
+                        enable: false,
+                        speed: 40,
+                        size_min: 0.1,
+                        sync: false,
+                    },
+                },
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: '#ffffff',
+                    opacity: 0.4,
+                    width: 1,
+                },
+                move: {
+                    enable: true,
+                    speed: 6,
+                    direction: 'none',
+                    random: false,
+                    straight: false,
+                    out_mode: 'out',
+                    bounce: false,
+                    attract: {
+                        enable: false,
+                        rotateX: 600,
+                        rotateY: 1200,
+                    },
                 },
             },
-        },
-        retina_detect: true,
-    };
+            interactivity: {
+                detect_on: 'canvas',
+                events: {
+                    onhover: {
+                        enable: true,
+                        mode: 'repulse',
+                    },
+                    onclick: {
+                        enable: true,
+                        mode: 'push',
+                    },
+                    resize: true,
+                },
+                modes: {
+                    grab: {
+                        distance: 400,
+                        line_linked: {
+                            opacity: 1,
+                        },
+                    },
+                    bubble: {
+                        distance: 400,
+                        size: 40,
+                        duration: 2,
+                        opacity: 8,
+                        speed: 3,
+                    },
+                    repulse: {
+                        distance: 200,
+                        duration: 0.4,
+                    },
+                    push: {
+                        particles_nb: 4,
+                    },
+                    remove: {
+                        particles_nb: 2,
+                    },
+                },
+            },
+            retina_detect: true,
+        };
 
-    let performanceMode = false;
-    let hdMode = false;
+        let performanceMode = false;
+        let hdMode = false;
 
-    particlesJS('particles-js', particleSettings);
+        particlesJS('particles-js', particleSettings);
 
-    function openSettings() {
-        document.getElementById('settingsModal').style.display = 'flex';
-    }
+        function openSettings() {
+            document.getElementById('settingsModal').style.display = 'flex';
+        }
 
-    function closeSettings() {
-        document.getElementById('settingsModal').style.display = 'none';
-    }
+        function closeSettings() {
+            document.getElementById('settingsModal').style.display = 'none';
+        }
 
-    function updateParticles(value) {
-        particleSettings.particles.number.value = parseInt(value);
+        function updateParticles(value) {
+            particleSettings.particles.number.value = parseInt(value);
 
-        if (particleSettings.particles.number.value > 150) {
-            document.getElementById('warningModal').style.display = 'flex';
-        } else {
+            if (particleSettings.particles.number.value > 150) {
+                document.getElementById('warningModal').style.display = 'flex';
+            } else {
+                document.getElementById('warningModal').style.display = 'none';
+            }
+
+            particlesJS('particles-js', 'destroy');
+            particlesJS('particles-js', particleSettings);
+        }
+
+        function updateParticleColor(color) {
+            particleSettings.particles.color.value = color;
+            particlesJS('particles-js', 'destroy');
+            particlesJS('particles-js', particleSettings);
+        }
+
+        function updateParticleShape(shape) {
+            particleSettings.particles.shape.type = shape;
+            particlesJS('particles-js', 'destroy');
+            particlesJS('particles-js', particleSettings);
+        }
+
+        function closeWarning() {
             document.getElementById('warningModal').style.display = 'none';
         }
 
-        particlesJS('particles-js', 'destroy');
-        particlesJS('particles-js', particleSettings);
-    }
+        function togglePerformanceMode() {
+            performanceMode = document.getElementById('performanceMode').checked;
 
-    function closeWarning() {
-        document.getElementById('warningModal').style.display = 'none';
-    }
+            if (performanceMode) {
+                particleSettings.particles.number.value = 50;
+            } else {
+                particleSettings.particles.number.value = 100;
+            }
 
-    function togglePerformanceMode() {
-        performanceMode = document.getElementById('performanceMode').checked;
+            document.getElementById('particleNumber').value = particleSettings.particles.number.value;
 
-        if (performanceMode) {
-            particleSettings.particles.number.value = 50;
-        } else {
-            particleSettings.particles.number.value = 100;
+            particlesJS('particles-js', 'destroy');
+            particlesJS('particles-js', particleSettings);
         }
 
-        document.getElementById('particleNumber').value = particleSettings.particles.number.value;
+        function toggleHdMode() {
+            hdMode = document.getElementById('hdMode').checked;
 
-        particlesJS('particles-js', 'destroy');
-        particlesJS('particles-js', particleSettings);
-    }
+            if (hdMode) {
+                particleSettings.particles.size.value = 2;
+                particleSettings.particles.opacity.value = 0.8;
+                particleSettings.particles.line_linked.opacity = 0.6;
+            } else {
+                particleSettings.particles.size.value = 3;
+                particleSettings.particles.opacity.value = 0.5;
+                particleSettings.particles.line_linked.opacity = 0.4;
+            }
 
-    function toggleHdMode() {
-        hdMode = document.getElementById('hdMode').checked;
-
-        if (hdMode) {
-            particleSettings.particles.size.value = 2;
-            particleSettings.particles.opacity.value = 0.8;
-            particleSettings.particles.line_linked.opacity = 0.6;
-        } else {
-            particleSettings.particles.size.value = 3;
-            particleSettings.particles.opacity.value = 0.5;
-            particleSettings.particles.line_linked.opacity = 0.4;
+            particlesJS('particles-js', 'destroy');
+            particlesJS('particles-js', particleSettings);
         }
-
-        particlesJS('particles-js', 'destroy');
-        particlesJS('particles-js', particleSettings);
-    }
-</script>
+    </script>
 </body>
 </html>
